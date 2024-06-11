@@ -24,6 +24,12 @@ fruit.set_fruit_position(snake)
 score = 0
 
 
+def restart_game(snake, fruit):
+    snake.set_start_position()
+    snake.set_start_body()
+    fruit.set_fruit_position(snake)
+
+
 # displaying Score function
 def show_score(choice, color, font, size):
 
@@ -46,7 +52,7 @@ def show_score(choice, color, font, size):
 def game_over():
 
     # creating font object my_font
-    my_font = pygame.font.SysFont("times new roman", 50)
+    my_font = pygame.font.SysFont("times new roman", 40)
 
     # creating a text surface on which text
     # will be drawn
@@ -63,7 +69,7 @@ def game_over():
     # blit will draw the text on screen
     game_window.blit(score_surface, score_rect)
 
-    restart_str = f"Press space to restart"
+    restart_str = f"Press space to restart. Escape to exit."
     restart_surface = my_font.render(restart_str, True, config.red)
 
     # create a rectangular object for the text
@@ -77,14 +83,21 @@ def game_over():
     game_window.blit(restart_surface, restart_rect)
     pygame.display.flip()
 
-    # after 2 seconds we will quit the program
-    time.sleep(2)
-
-    # deactivating pygame library
-    pygame.quit()
-
-    # quit the program
-    quit()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    # Make class for game
+                    return
+                elif event.key == pygame.K_ESCAPE:
+                    # deactivating pygame library
+                    pygame.quit()
+                    # quit the program
+                    quit()
+            elif event.type == pygame.QUIT:
+                pygame.quit()
+                # quit the program
+                quit()
 
 
 # Main Function
@@ -102,6 +115,10 @@ while True:
                 new_direction = "LEFT"
             if event.key == pygame.K_RIGHT:
                 new_direction = "RIGHT"
+        elif event.type == pygame.QUIT:
+            pygame.quit()
+            # quit the program
+            quit()
 
     # Moving the snake
     snake.move(new_direction, fruit)
@@ -110,7 +127,7 @@ while True:
     # if fruits and snakes collide then scores
     # will be incremented by 10
     if fruit.eaten:
-        score += 10
+        score += 1
         fruit.eaten = False
         fruit.set_fruit_position(snake)
 
@@ -124,6 +141,8 @@ while True:
     # Touching the snake body
     if snake.check_body_collision():
         game_over()
+        restart_game(snake, fruit)
+        score = 0
 
     # displaying score continuously
     show_score(1, config.white, "times new roman", 20)
