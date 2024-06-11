@@ -13,7 +13,7 @@ class Fruit:
             return True
         return False
 
-    def set_fruit_position(self, snake):
+    def set_position(self, snake):
         while True:
             random_position = [
                 random.randrange(1, (config.window_width // 10)) * 10,

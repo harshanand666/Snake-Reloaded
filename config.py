@@ -1,7 +1,7 @@
 import pygame
 
 snake_speed = 15
-start_snake_size = 4
+start_snake_size = 8
 
 # Window size
 window_width = 720
@@ -13,3 +13,7 @@ white = pygame.Color(255, 255, 255)
 red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 255, 0)
 blue = pygame.Color(0, 0, 255)
+
+# Font
+score_font = ("times new roman", 20)
+game_over_font = ("times new roman", 40)
