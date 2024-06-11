@@ -18,3 +18,6 @@ blue = pygame.Color(0, 0, 255)
 score_font = ("times new roman", 20)
 game_over_font = ("times new roman", 40)
 difficulty_font = ("times new roman", 40)
+
+# Wall
+wall_size = 5

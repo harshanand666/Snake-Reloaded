@@ -71,8 +71,14 @@ class Snake:
                 game_window, config.green, pygame.Rect(pos[0], pos[1], 10, 10)
             )
 
-    def check_body_collision(self):
+    def body_collision(self):
         for block in self.body[1:]:
             if self.position == block:
+                return True
+        return False
+
+    def wall_collision(self, walls):
+        for wall in walls:
+            if self.position in wall:
                 return True
         return False
