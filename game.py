@@ -17,52 +17,47 @@ class Game:
         self.fruit.set_position(self.snake)
         self.score = 0
 
+    def increase_speed(self):
+        # Fix font and make code efficient / cleaner
+        speed_surface = pygame.font.SysFont(*config.difficulty_font).render(
+            "INCREASING SPEED", True, config.blue
+        )
+        speed_rect = speed_surface.get_rect()
+        speed_rect.center = (config.window_width / 2, config.window_height / 2)
+        self.game_window.blit(speed_surface, speed_rect)
+        self.snake.speed += 10
+        pygame.display.flip()
+        pygame.time.delay(1000)
+
     def show_score(self):
 
-        # create the display surface object
-        # score_surface
+        # Surface and rect to show score
         score_surface = pygame.font.SysFont(*config.score_font).render(
             "Score : " + str(self.score), True, config.white
         )
-
-        # create a rectangular object for the text
-        # surface object
         score_rect = score_surface.get_rect()
 
-        # displaying text
         self.game_window.blit(score_surface, score_rect)
 
     def game_over(self):
 
-        # creating a text surface on which text
-        # will be drawn
+        # Surface and rect to show game over text
         score_surface = pygame.font.SysFont(*config.game_over_font).render(
             f"Your Score is : {self.score}", True, config.red
         )
-
-        # create a rectangular object for the text
-        # surface object
         score_rect = score_surface.get_rect()
 
-        # setting position of the text
+        # Position text
         score_rect.midtop = (config.window_width / 2, config.window_height / 4)
-
-        # blit will draw the text on screen
         self.game_window.blit(score_surface, score_rect)
 
         restart_surface = pygame.font.SysFont(*config.game_over_font).render(
             "Press space to restart. Escape to exit.", True, config.red
         )
-
-        # create a rectangular object for the text
-        # surface object
         restart_rect = restart_surface.get_rect()
-
-        # setting position of the text
         restart_rect.midtop = (config.window_width / 2, config.window_height / 2)
-
-        # blit will draw the text on screen
         self.game_window.blit(restart_surface, restart_rect)
+
         pygame.display.flip()
 
         while True:
@@ -72,18 +67,14 @@ class Game:
                         self.restart()
                         return
                     elif event.key == pygame.K_ESCAPE:
-                        # deactivating pygame library
                         pygame.quit()
-                        # quit the program
                         quit()
                 elif event.type == pygame.QUIT:
                     pygame.quit()
-                    # quit the program
                     quit()
 
     def run(self):
         new_direction = self.snake.cur_direction
-        # handling key events
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -96,17 +87,14 @@ class Game:
                     new_direction = "RIGHT"
             elif event.type == pygame.QUIT:
                 pygame.quit()
-                # quit the program
                 quit()
 
-        # Moving the snake
         self.snake.move(new_direction, self.fruit)
 
-        # Snake body growing mechanism
-        # if fruits and snakes collide then scores
-        # will be incremented by 10
         if self.fruit.eaten:
             self.score += 1
+            if self.score % 5 == 0:
+                self.increase_speed()
             self.fruit.eaten = False
             self.fruit.set_position(self.snake)
 
@@ -115,11 +103,8 @@ class Game:
         self.snake.draw(self.game_window)
         self.fruit.draw(self.game_window)
 
-        # Game Over conditions
-
         # Touching the snake body
         if self.snake.check_body_collision():
             self.game_over()
 
-        # displaying score continuously
         self.show_score()

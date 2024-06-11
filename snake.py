@@ -6,7 +6,7 @@ import random
 class Snake:
 
     def __init__(self):
-        self.speed = config.snake_speed
+        self.speed = config.start_speed
         self.position = [0, 0]
         self.body = []
         self.cur_direction = "RIGHT"
