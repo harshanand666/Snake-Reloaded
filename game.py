@@ -8,24 +8,28 @@ class Game:
     def __init__(self, snake, fruit, game_window):
         self.snake = snake
         self.fruit = fruit
-        self.fruit.set_position(self.snake)
         self.score = 0
         self.game_window = game_window
         self.walls = []
         self.directional_blocks = []
+        self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
 
     def restart(self):
         self.snake.set_start_position()
         self.snake.set_start_body()
-        self.fruit.set_position(self.snake)
+        self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
         self.score = 0
         self.walls = []
         self.snake.speed = config.start_speed
 
-    def overlap(self, random_position, snake):
+    def overlap_all(self, position):
         # Fix this, dupe from fruit
         # Add overlap with walls also
-        if random_position in snake.body:
+        if position in self.snake.body:
+            return True
+        elif any([position in wall for wall in self.walls]):
+            return True
+        elif position in self.directional_blocks:
             return True
         return False
 
@@ -38,21 +42,29 @@ class Game:
         # Add condition for wall to not be in same line as snake OR ON SNAKE BODY
         while True:
             random_position = [
-                random.randrange(1, (config.window_width // 10)) * 10,
-                random.randrange(1, (config.window_height // 10)) * 10,
+                random.randrange(1, (config.window_width // config.block_size))
+                * config.block_size,
+                random.randrange(1, (config.window_height // config.block_size))
+                * config.block_size,
             ]
-            if not self.overlap(random_position, self.snake):
+            if not self.overlap_all(random_position):
                 break
 
         start_x, start_y = random_position[0], random_position[1]
         wall_direction = random.choice(["V", "H"])
         if wall_direction == "H":
             new_wall = [
-                [start_x - i, start_y] for i in range(0, config.wall_size * 10, 10)
+                [start_x - i, start_y]
+                for i in range(
+                    0, config.wall_size * config.block_size, config.block_size
+                )
             ]
         else:
             new_wall = [
-                [start_x, start_y - i] for i in range(0, config.wall_size * 10, 10)
+                [start_x, start_y - i]
+                for i in range(
+                    0, config.wall_size * config.block_size, config.block_size
+                )
             ]
         self.walls.append(new_wall)
         return "ADDING WALL"
@@ -61,7 +73,9 @@ class Game:
         for wall in self.walls:
             for pos in wall:
                 pygame.draw.rect(
-                    self.game_window, config.red, pygame.Rect(pos[0], pos[1], 10, 10)
+                    self.game_window,
+                    config.red,
+                    pygame.Rect(pos[0], pos[1], config.block_size, config.block_size),
                 )
 
     def add_directional_block(self):
@@ -70,10 +84,12 @@ class Game:
         # Add logic for overlap with walls and food
         while True:
             random_position = [
-                random.randrange(1, (config.window_width // 10)) * 10,
-                random.randrange(1, (config.window_height // 10)) * 10,
+                random.randrange(1, (config.window_width // config.block_size))
+                * config.block_size,
+                random.randrange(1, (config.window_height // config.block_size))
+                * config.block_size,
             ]
-            if not self.overlap(random_position, self.snake):
+            if not self.overlap_all(random_position):
                 self.position = random_position
                 break
         self.directional_blocks.append(random_position)
@@ -82,7 +98,9 @@ class Game:
     def draw_directional_blocks(self):
         for pos in self.directional_blocks:
             pygame.draw.rect(
-                self.game_window, config.yellow, pygame.Rect(pos[0], pos[1], 10, 10)
+                self.game_window,
+                config.yellow,
+                pygame.Rect(pos[0], pos[1], config.block_size, config.block_size),
             )
 
     def add_poisonous_fruit(self):
@@ -95,9 +113,9 @@ class Game:
         # Add directional blocks
         # Add poisonous fruit chance
         diff_options = [
-            # self.increase_speed,
-            # self.add_wall,
-            # self.add_directional_block,
+            self.increase_speed,
+            self.add_wall,
+            self.add_directional_block,
             self.add_poisonous_fruit,
         ]
         diff_text = random.choice(diff_options)()
@@ -183,7 +201,7 @@ class Game:
             if self.score % 1 == 0:
                 self.increase_difficulty()
             self.fruit.eaten = False
-            self.fruit.set_position(self.snake)
+            self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
         elif self.fruit.poisonous_eaten:
             self.score = max(self.score - config.poison_score_penalty, 0)
             snake_len = len(self.snake.body)
@@ -192,7 +210,7 @@ class Game:
             ]
             self.fruit.poisonous_eaten = False
             self.fruit.poisonous = False
-            self.fruit.set_position(self.snake)
+            self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
 
         self.game_window.fill(config.black)
 

@@ -14,16 +14,26 @@ class Snake:
         self.set_start_body()
 
     def set_start_position(self):
-        # Middle of screen moving right
+        """
+        Sets the start position of the snake randomly on the screen
+        """
         self.position = [
-            random.randrange(1, (config.window_width // 20)) * 10,
-            random.randrange(1, (config.window_height // 20)) * 10,
+            random.randrange(1, (config.window_width // config.block_size))
+            * config.block_size,
+            random.randrange(1, (config.window_height // config.block_size * 2))
+            * config.block_size,
         ]
 
     def set_start_body(self):
+        """
+        Creates the starting body of the snake based on its location
+        """
         start_x, start_y = self.position[0], self.position[1]
         self.body = [
-            [start_x - i, start_y] for i in range(0, config.start_snake_size * 10, 10)
+            [start_x - i, start_y]
+            for i in range(
+                0, config.start_snake_size * config.block_size, config.block_size
+            )
         ]
 
     def valid_change(self, new_direction):
@@ -32,22 +42,22 @@ class Snake:
 
     def update_position(self, direction):
         if direction == "UP":
-            self.position[1] -= 10
+            self.position[1] -= config.block_size
         elif direction == "DOWN":
-            self.position[1] += 10
+            self.position[1] += config.block_size
         elif direction == "LEFT":
-            self.position[0] -= 10
+            self.position[0] -= config.block_size
         elif direction == "RIGHT":
-            self.position[0] += 10
+            self.position[0] += config.block_size
 
         if self.position[0] < 0:
-            self.position[0] = config.window_width - 10
-        elif self.position[0] > config.window_width - 10:
+            self.position[0] = config.window_width - config.block_size
+        elif self.position[0] > config.window_width - config.block_size:
             self.position[0] = 0
 
         if self.position[1] < 0:
-            self.position[1] = config.window_height - 10
-        elif self.position[1] > config.window_height - 10:
+            self.position[1] = config.window_height - config.block_size
+        elif self.position[1] > config.window_height - config.block_size:
             self.position[1] = 0
         # self.position[0] %= config.window_width
         # self.position[1] %= config.window_height
@@ -79,7 +89,9 @@ class Snake:
     def draw(self, game_window):
         for pos in self.body:
             pygame.draw.rect(
-                game_window, config.green, pygame.Rect(pos[0], pos[1], 10, 10)
+                game_window,
+                config.green,
+                pygame.Rect(pos[0], pos[1], config.block_size, config.block_size),
             )
 
     def body_collision(self):
