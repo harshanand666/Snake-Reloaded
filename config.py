@@ -13,6 +13,7 @@ white = pygame.Color(255, 255, 255)
 red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 255, 0)
 blue = pygame.Color(0, 0, 255)
+yellow = pygame.Color(255, 255, 0)
 
 # Font
 score_font = ("times new roman", 20)
@@ -21,3 +22,9 @@ difficulty_font = ("times new roman", 40)
 
 # Wall
 wall_size = 5
+
+# Add pixel length and use everywhere
+
+
+# poisonous
+poison_score_penalty = 3

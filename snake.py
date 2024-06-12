@@ -56,11 +56,22 @@ class Snake:
         self.body.insert(0, list(self.position))
         if self.position == fruit.position:
             fruit.eaten = True
+        elif self.position == fruit.poisonous_position:
+            fruit.poisonous_eaten = True
         else:
             self.body.pop()
 
-    def move(self, new_direction, fruit):
-        if self.valid_change(new_direction):
+    def move(self, new_direction, fruit, directional_blocks):
+        # Make logic better
+        if self.directional_collision(directional_blocks):
+            opposites = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}
+            valid_dirs = [
+                dir
+                for dir in ["UP", "DOWN", "LEFT", "RIGHT"]
+                if dir != opposites[self.cur_direction]
+            ]
+            self.cur_direction = random.choice(valid_dirs)
+        elif self.valid_change(new_direction):
             self.cur_direction = new_direction
         self.update_position(self.cur_direction)
         self.update_body(fruit)
@@ -80,5 +91,11 @@ class Snake:
     def wall_collision(self, walls):
         for wall in walls:
             if self.position in wall:
+                return True
+        return False
+
+    def directional_collision(self, directional_blocks):
+        for block in directional_blocks:
+            if self.position == block:
                 return True
         return False

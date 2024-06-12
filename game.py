@@ -12,6 +12,7 @@ class Game:
         self.score = 0
         self.game_window = game_window
         self.walls = []
+        self.directional_blocks = []
 
     def restart(self):
         self.snake.set_start_position()
@@ -33,7 +34,7 @@ class Game:
         return "INCREASING SPEED"
 
     def add_wall(self):
-        # Add draw for walls, game over condition, overlap between walls
+        # Add draw for walls, game over condition, overlap between walls and with food
         # Add condition for wall to not be in same line as snake OR ON SNAKE BODY
         while True:
             random_position = [
@@ -41,8 +42,8 @@ class Game:
                 random.randrange(1, (config.window_height // 10)) * 10,
             ]
             if not self.overlap(random_position, self.snake):
-                self.position = random_position
                 break
+
         start_x, start_y = random_position[0], random_position[1]
         wall_direction = random.choice(["V", "H"])
         if wall_direction == "H":
@@ -63,8 +64,42 @@ class Game:
                     self.game_window, config.red, pygame.Rect(pos[0], pos[1], 10, 10)
                 )
 
+    def add_directional_block(self):
+        # Add logic for random direction on collision
+        # Add image for directional block
+        # Add logic for overlap with walls and food
+        while True:
+            random_position = [
+                random.randrange(1, (config.window_width // 10)) * 10,
+                random.randrange(1, (config.window_height // 10)) * 10,
+            ]
+            if not self.overlap(random_position, self.snake):
+                self.position = random_position
+                break
+        self.directional_blocks.append(random_position)
+        return "ADDING DIRECTIONAL BLOCK"
+
+    def draw_directional_blocks(self):
+        for pos in self.directional_blocks:
+            pygame.draw.rect(
+                self.game_window, config.yellow, pygame.Rect(pos[0], pos[1], 10, 10)
+            )
+
+    def add_poisonous_fruit(self):
+        # Add message when eating poisonous fruit
+        # Add question mark image when poisonous
+        self.fruit.poisonous = True
+        return "ADDING POISONOUS FRUIT"
+
     def increase_difficulty(self):
-        diff_options = [self.increase_speed, self.add_wall]
+        # Add directional blocks
+        # Add poisonous fruit chance
+        diff_options = [
+            # self.increase_speed,
+            # self.add_wall,
+            # self.add_directional_block,
+            self.add_poisonous_fruit,
+        ]
         diff_text = random.choice(diff_options)()
 
         # Fix font and make code efficient / cleaner
@@ -141,7 +176,7 @@ class Game:
                 pygame.quit()
                 quit()
 
-        self.snake.move(new_direction, self.fruit)
+        self.snake.move(new_direction, self.fruit, self.directional_blocks)
 
         if self.fruit.eaten:
             self.score += 1
@@ -149,14 +184,23 @@ class Game:
                 self.increase_difficulty()
             self.fruit.eaten = False
             self.fruit.set_position(self.snake)
+        elif self.fruit.poisonous_eaten:
+            self.score = max(self.score - config.poison_score_penalty, 0)
+            snake_len = len(self.snake.body)
+            self.snake.body = self.snake.body[
+                : max(snake_len // 2, config.start_snake_size)
+            ]
+            self.fruit.poisonous_eaten = False
+            self.fruit.poisonous = False
+            self.fruit.set_position(self.snake)
 
         self.game_window.fill(config.black)
 
         self.snake.draw(self.game_window)
         self.fruit.draw(self.game_window)
         self.draw_walls()
+        self.draw_directional_blocks()
 
-        # Touching the snake body
         self.check_game_over()
 
         self.show_score()
