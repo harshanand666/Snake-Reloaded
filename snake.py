@@ -4,8 +4,10 @@ import random
 
 
 class Snake:
-
     def __init__(self):
+        """
+        Initializes the snake with starting speed, position, body, and direction.
+        """
         self.speed = config.start_speed
         self.position = [0, 0]
         self.body = []
@@ -15,7 +17,7 @@ class Snake:
 
     def set_start_position(self):
         """
-        Sets the start position of the snake randomly on the screen
+        Sets the start position of the snake randomly on the screen.
         """
         self.position = [
             random.randrange(1, (config.window_width // config.block_size))
@@ -26,7 +28,7 @@ class Snake:
 
     def set_start_body(self):
         """
-        Creates the starting body of the snake based on its location
+        Creates the starting body of the snake based on its location.
         """
         start_x, start_y = self.position[0], self.position[1]
         self.body = [
@@ -37,10 +39,25 @@ class Snake:
         ]
 
     def valid_change(self, new_direction):
+        """
+        Checks if the new direction is valid (not opposite to the current direction).
+
+        Args:
+            new_direction (str): The new direction to be checked.
+
+        Returns:
+            bool: True if the change is valid, False otherwise.
+        """
         opposites = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}
         return new_direction != opposites[self.cur_direction]
 
     def update_position(self, direction):
+        """
+        Updates the snake's position based on the current direction.
+
+        Args:
+            direction (str): The direction in which the snake is moving.
+        """
         if direction == "UP":
             self.position[1] -= config.block_size
         elif direction == "DOWN":
@@ -50,19 +67,16 @@ class Snake:
         elif direction == "RIGHT":
             self.position[0] += config.block_size
 
-        if self.position[0] < 0:
-            self.position[0] = config.window_width - config.block_size
-        elif self.position[0] > config.window_width - config.block_size:
-            self.position[0] = 0
-
-        if self.position[1] < 0:
-            self.position[1] = config.window_height - config.block_size
-        elif self.position[1] > config.window_height - config.block_size:
-            self.position[1] = 0
-        # self.position[0] %= config.window_width
-        # self.position[1] %= config.window_height
+        self.position[0] %= config.window_width
+        self.position[1] %= config.window_height
 
     def update_body(self, fruit):
+        """
+        Updates the snake's body. Grows the body if the snake eats a fruit.
+
+        Args:
+            fruit (Fruit): The fruit object to check if eaten.
+        """
         self.body.insert(0, list(self.position))
         if self.position == fruit.position:
             fruit.eaten = True
@@ -72,7 +86,14 @@ class Snake:
             self.body.pop()
 
     def move(self, new_direction, fruit, directional_blocks):
-        # Make logic better
+        """
+        Moves the snake in the specified direction and updates its body.
+
+        Args:
+            new_direction (str): The new direction to move.
+            fruit (Fruit): The fruit object to check if eaten.
+            directional_blocks (list): List of directional blocks positions.
+        """
         if self.directional_collision(directional_blocks):
             opposites = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}
             valid_dirs = [
@@ -87,6 +108,12 @@ class Snake:
         self.update_body(fruit)
 
     def draw(self, game_window):
+        """
+        Draws the snake on the game window.
+
+        Args:
+            game_window (pygame.Surface): The game window surface.
+        """
         for pos in self.body:
             pygame.draw.rect(
                 game_window,
@@ -95,18 +122,42 @@ class Snake:
             )
 
     def body_collision(self):
+        """
+        Checks if the snake has collided with its own body.
+
+        Returns:
+            bool: True if there is a collision, False otherwise.
+        """
         for block in self.body[1:]:
             if self.position == block:
                 return True
         return False
 
     def wall_collision(self, walls):
+        """
+        Checks if the snake has collided with any walls.
+
+        Args:
+            walls (list): List of wall positions.
+
+        Returns:
+            bool: True if there is a collision, False otherwise.
+        """
         for wall in walls:
             if self.position in wall:
                 return True
         return False
 
     def directional_collision(self, directional_blocks):
+        """
+        Checks if the snake has collided with any directional blocks.
+
+        Args:
+            directional_blocks (list): List of directional blocks positions.
+
+        Returns:
+            bool: True if there is a collision, False otherwise.
+        """
         for block in directional_blocks:
             if self.position == block:
                 return True

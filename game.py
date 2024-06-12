@@ -4,8 +4,10 @@ import random
 
 
 class Game:
-
     def __init__(self, snake, fruit, game_window):
+        """
+        Initializes the game with a snake, fruit, game window, score, and other game elements.
+        """
         self.snake = snake
         self.fruit = fruit
         self.score = 0
@@ -15,6 +17,9 @@ class Game:
         self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
 
     def restart(self):
+        """
+        Restarts the game by resetting the snake, fruit, score, and other elements.
+        """
         self.snake.set_start_position()
         self.snake.set_start_body()
         self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
@@ -23,8 +28,15 @@ class Game:
         self.snake.speed = config.start_speed
 
     def overlap_all(self, position):
-        # Fix this, dupe from fruit
-        # Add overlap with walls also
+        """
+        Checks if a given position overlaps with the snake, walls, or directional blocks.
+
+        Args:
+            position (list): The position to check for overlap.
+
+        Returns:
+            bool: True if there is an overlap, False otherwise.
+        """
         if position in self.snake.body:
             return True
         elif any([position in wall for wall in self.walls]):
@@ -34,12 +46,22 @@ class Game:
         return False
 
     def increase_speed(self):
+        """
+        Increases the speed of the snake.
+
+        Returns:
+            str: Message indicating the action taken.
+        """
         self.snake.speed += 10
         return "INCREASING SPEED"
 
     def add_wall(self):
-        # Add draw for walls, game over condition, overlap between walls and with food
-        # Add condition for wall to not be in same line as snake OR ON SNAKE BODY
+        """
+        Adds a new wall to the game at a random position.
+
+        Returns:
+            str: Message indicating the action taken.
+        """
         while True:
             random_position = [
                 random.randrange(1, (config.window_width // config.block_size))
@@ -70,6 +92,9 @@ class Game:
         return "ADDING WALL"
 
     def draw_walls(self):
+        """
+        Draws all walls on the game window.
+        """
         for wall in self.walls:
             for pos in wall:
                 pygame.draw.rect(
@@ -79,9 +104,12 @@ class Game:
                 )
 
     def add_directional_block(self):
-        # Add logic for random direction on collision
-        # Add image for directional block
-        # Add logic for overlap with walls and food
+        """
+        Adds a new directional block to the game at a random position.
+
+        Returns:
+            str: Message indicating the action taken.
+        """
         while True:
             random_position = [
                 random.randrange(1, (config.window_width // config.block_size))
@@ -96,6 +124,9 @@ class Game:
         return "ADDING DIRECTIONAL BLOCK"
 
     def draw_directional_blocks(self):
+        """
+        Draws all directional blocks on the game window.
+        """
         for pos in self.directional_blocks:
             pygame.draw.rect(
                 self.game_window,
@@ -104,14 +135,22 @@ class Game:
             )
 
     def add_poisonous_fruit(self):
-        # Add message when eating poisonous fruit
-        # Add question mark image when poisonous
+        """
+        Adds a poisonous fruit to the game.
+
+        Returns:
+            str: Message indicating the action taken.
+        """
         self.fruit.poisonous = True
         return "ADDING POISONOUS FRUIT"
 
     def increase_difficulty(self):
-        # Add directional blocks
-        # Add poisonous fruit chance
+        """
+        Increases the difficulty of the game by adding speed, walls, directional blocks, or poisonous fruit.
+
+        Returns:
+            str: Message indicating the action taken.
+        """
         diff_options = [
             self.increase_speed,
             self.add_wall,
@@ -120,7 +159,6 @@ class Game:
         ]
         diff_text = random.choice(diff_options)()
 
-        # Fix font and make code efficient / cleaner
         diff_surface = pygame.font.SysFont(*config.difficulty_font).render(
             diff_text, True, config.blue
         )
@@ -131,8 +169,9 @@ class Game:
         pygame.time.delay(1000)
 
     def show_score(self):
-
-        # Surface and rect to show score
+        """
+        Displays the current score on the game window.
+        """
         score_surface = pygame.font.SysFont(*config.score_font).render(
             "Score : " + str(self.score), True, config.white
         )
@@ -141,14 +180,13 @@ class Game:
         self.game_window.blit(score_surface, score_rect)
 
     def game_over(self):
-
-        # Surface and rect to show game over text
+        """
+        Displays the game over message and waits for user input to restart or exit the game.
+        """
         score_surface = pygame.font.SysFont(*config.game_over_font).render(
             f"Your Score is : {self.score}", True, config.red
         )
         score_rect = score_surface.get_rect()
-
-        # Position text
         score_rect.midtop = (config.window_width / 2, config.window_height / 4)
         self.game_window.blit(score_surface, score_rect)
 
@@ -175,10 +213,16 @@ class Game:
                     quit()
 
     def check_game_over(self):
+        """
+        Checks if the game is over by detecting snake's collision with its body or walls.
+        """
         if self.snake.body_collision() or self.snake.wall_collision(self.walls):
             self.game_over()
 
     def run(self):
+        """
+        Runs the game loop, handling events, updating game state, and rendering the game.
+        """
         new_direction = self.snake.cur_direction
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
