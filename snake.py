@@ -30,6 +30,7 @@ class Snake:
         """
         Creates the starting body of the snake based on its location.
         """
+        self.cur_direction = "RIGHT"
         start_x, start_y = self.position[0], self.position[1]
         self.body = [
             [start_x - i, start_y]

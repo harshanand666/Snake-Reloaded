@@ -14,27 +14,6 @@ class Fruit:
         self.poisonous_position = [0, 0]
         self.poisonous_eaten = False
 
-    def overlap(self, position, snake, walls, directional_blocks):
-        """
-        Checks if a given position overlaps with the snake, walls, or directional blocks.
-
-        Args:
-            position (list): The position to check for overlap.
-            snake (Snake): The snake object.
-            walls (list): List of wall positions.
-            directional_blocks (list): List of directional blocks positions.
-
-        Returns:
-            bool: True if there is an overlap, False otherwise.
-        """
-        if position in snake.body:
-            return True
-        elif any([position in wall for wall in walls]):
-            return True
-        elif position in directional_blocks:
-            return True
-        return False
-
     def set_position(self, game):
         """
         Sets a random position for the fruit and a poisonous fruit if applicable.
