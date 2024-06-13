@@ -22,9 +22,12 @@ class Game:
         """
         self.snake.set_start_position()
         self.snake.set_start_body()
-        self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
         self.score = 0
         self.walls = []
+        self.directional_blocks = []
+        self.fruit.poisonous = False
+        self.fruit.poisonous_eaten = False
+        self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
         self.snake.speed = config.start_speed
 
     def overlap_all(self, position):
@@ -52,7 +55,7 @@ class Game:
         Returns:
             str: Message indicating the action taken.
         """
-        self.snake.speed += 10
+        self.snake.speed += config.speed_increase
         return "INCREASING SPEED"
 
     def add_wall(self):
@@ -147,10 +150,11 @@ class Game:
     def increase_difficulty(self):
         """
         Increases the difficulty of the game by adding speed, walls, directional blocks, or poisonous fruit.
-
-        Returns:
-            str: Message indicating the action taken.
         """
+        # Add all numbers to config
+        # Directional and poisonous add images
+        # Flashing image for this
+        # Flashing image when eating poisonous fruit
         diff_options = [
             self.increase_speed,
             self.add_wall,
@@ -178,6 +182,37 @@ class Game:
         score_rect = score_surface.get_rect()
 
         self.game_window.blit(score_surface, score_rect)
+
+    def show_legend(self):
+        """
+        Displays the legend for different objects in the game.
+        """
+        legend_items = [
+            ("Directional Block", config.yellow),
+            ("Poisonous Fruit", config.purple),
+            ("Wall", config.red),
+        ]
+
+        font = pygame.font.SysFont(*config.legend_font)
+
+        # Start position for legend
+        x_offset = 150
+        y_offset = 10
+        spacing = 200
+
+        for index, (text, color) in enumerate(legend_items):
+            # Draw colored square
+            pygame.draw.rect(
+                self.game_window,
+                color,
+                pygame.Rect(x_offset + index * spacing, y_offset, 10, 10),
+            )
+
+            # Draw text
+            legend_surface = font.render(text, True, config.white)
+            legend_rect = legend_surface.get_rect()
+            legend_rect.topleft = (x_offset + index * spacing + 15, y_offset - 5)
+            self.game_window.blit(legend_surface, legend_rect)
 
     def game_over(self):
         """
@@ -234,6 +269,9 @@ class Game:
                     new_direction = "LEFT"
                 if event.key == pygame.K_RIGHT:
                     new_direction = "RIGHT"
+                elif event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
             elif event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -242,7 +280,7 @@ class Game:
 
         if self.fruit.eaten:
             self.score += 1
-            if self.score % 1 == 0:
+            if self.score % config.difficulty_multiple == 0:
                 self.increase_difficulty()
             self.fruit.eaten = False
             self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
@@ -266,3 +304,4 @@ class Game:
         self.check_game_over()
 
         self.show_score()
+        self.show_legend()
