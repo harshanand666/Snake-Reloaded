@@ -176,6 +176,7 @@ class Game:
         """
         Displays the current score on the game window.
         """
+        # ADD SEPARATE STRIP FOR SCORE
         score_surface = pygame.font.SysFont(*config.score_font).render(
             "Score : " + str(self.score), True, config.white
         )

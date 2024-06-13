@@ -2,10 +2,14 @@ import pygame
 
 start_snake_size = 8
 start_speed = 20
+speed_increase = 10
+difficulty_multiple = 1
 
 # Window size
 window_width = 720
 window_height = 480
+strip_height = 40  # Height of the strip for score and legend
+game_window_height = window_height - strip_height
 
 # defining colors
 black = pygame.Color(0, 0, 0)
@@ -18,6 +22,7 @@ purple = (128, 0, 128)
 
 # Font
 score_font = ("times new roman", 20)
+legend_font = ("times new roman", 20)
 game_over_font = ("times new roman", 40)
 difficulty_font = ("times new roman", 40)
 
@@ -29,3 +34,6 @@ block_size = 10
 
 # poisonous
 poison_score_penalty = 3
+
+# opposite directions
+direction_dir = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}

@@ -11,7 +11,7 @@ class Snake:
         self.speed = config.start_speed
         self.position = [0, 0]
         self.body = []
-        self.cur_direction = "RIGHT"
+        self.cur_direction = random.choice(list(config.direction_dir.keys()))
         self.set_start_position()
         self.set_start_body()
 
@@ -22,7 +22,7 @@ class Snake:
         self.position = [
             random.randrange(1, (config.window_width // config.block_size))
             * config.block_size,
-            random.randrange(1, (config.window_height // config.block_size * 2))
+            random.randrange(1, (config.window_height // config.block_size))
             * config.block_size,
         ]
 
@@ -48,12 +48,11 @@ class Snake:
         Returns:
             bool: True if the change is valid, False otherwise.
         """
-        opposites = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}
-        return new_direction != opposites[self.cur_direction]
+        return new_direction != config.direction_dir[self.cur_direction]
 
     def update_position(self, direction):
         """
-        Updates the snake's position based on the current direction.
+        Updates the snake's position based on the direction.
 
         Args:
             direction (str): The direction in which the snake is moving.
@@ -67,8 +66,17 @@ class Snake:
         elif direction == "RIGHT":
             self.position[0] += config.block_size
 
-        self.position[0] %= config.window_width
-        self.position[1] %= config.window_height
+        if self.position[0] < config.block_size:
+            self.position[0] = config.window_width - config.block_size
+        elif self.position[0] > config.window_width - config.block_size:
+            self.position[0] = 0
+
+        if self.position[1] < config.block_size:
+            self.position[1] = config.window_height - config.block_size
+        elif self.position[1] > config.window_height - config.block_size:
+            self.position[1] = 0
+        # self.position[0] %= config.window_width
+        # self.position[1] %= config.window_height
 
     def update_body(self, fruit):
         """
@@ -95,11 +103,10 @@ class Snake:
             directional_blocks (list): List of directional blocks positions.
         """
         if self.directional_collision(directional_blocks):
-            opposites = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}
             valid_dirs = [
                 dir
-                for dir in ["UP", "DOWN", "LEFT", "RIGHT"]
-                if dir != opposites[self.cur_direction]
+                for dir in config.direction_dir.keys()
+                if dir != config.direction_dir[self.cur_direction]
             ]
             self.cur_direction = random.choice(valid_dirs)
         elif self.valid_change(new_direction):
