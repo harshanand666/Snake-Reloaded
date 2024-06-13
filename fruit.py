@@ -35,7 +35,7 @@ class Fruit:
             return True
         return False
 
-    def set_position(self, snake, walls, directional_blocks):
+    def set_position(self, game):
         """
         Sets a random position for the fruit and a poisonous fruit if applicable.
 
@@ -51,7 +51,7 @@ class Fruit:
                 random.randrange(1, (config.window_height // config.block_size))
                 * config.block_size,
             ]
-            if not self.overlap(position, snake, walls, directional_blocks):
+            if not game.overlap_all(position):
                 self.position = position
                 break
 
@@ -64,9 +64,7 @@ class Fruit:
                     * config.block_size,
                 ]
                 if (
-                    not self.overlap(
-                        poisonous_position, snake, walls, directional_blocks
-                    )
+                    not game.overlap_all(poisonous_position)
                     and poisonous_position != position
                 ):
                     self.poisonous_position = poisonous_position

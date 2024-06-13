@@ -14,21 +14,21 @@ class Game:
         self.game_window = game_window
         self.walls = []
         self.directional_blocks = []
-        self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
+        self.fruit.set_position(self)
 
     def restart(self):
         """
         Restarts the game by resetting the snake, fruit, score, and other elements.
         """
-        self.snake.set_start_position()
-        self.snake.set_start_body()
         self.score = 0
         self.walls = []
         self.directional_blocks = []
         self.fruit.poisonous = False
         self.fruit.poisonous_eaten = False
-        self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
+        self.snake.set_start_position()
+        self.snake.set_start_body()
         self.snake.speed = config.start_speed
+        self.fruit.set_position(self)
 
     def overlap_all(self, position):
         """
@@ -45,6 +45,10 @@ class Game:
         elif any([position in wall for wall in self.walls]):
             return True
         elif position in self.directional_blocks:
+            return True
+        elif (
+            position in self.fruit.position or position in self.fruit.poisonous_position
+        ):
             return True
         return False
 
@@ -152,9 +156,9 @@ class Game:
         Increases the difficulty of the game by adding speed, walls, directional blocks, or poisonous fruit.
         """
         # Add all numbers to config
-        # Directional and poisonous add images
         # Flashing image for this
         # Flashing image when eating poisonous fruit
+        # Add overlap for all blocks
         diff_options = [
             self.increase_speed,
             self.add_wall,
@@ -280,20 +284,23 @@ class Game:
         self.snake.move(new_direction, self.fruit, self.directional_blocks)
 
         if self.fruit.eaten:
+            self.fruit.poisonous = False
             self.score += 1
             if self.score % config.difficulty_multiple == 0:
                 self.increase_difficulty()
             self.fruit.eaten = False
-            self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
+            self.fruit.poisonous_eaten = False
+            self.fruit.set_position(self)
         elif self.fruit.poisonous_eaten:
             self.score = max(self.score - config.poison_score_penalty, 0)
             snake_len = len(self.snake.body)
             self.snake.body = self.snake.body[
                 : max(snake_len // 2, config.start_snake_size)
             ]
+            self.fruit.eaten = False
             self.fruit.poisonous_eaten = False
             self.fruit.poisonous = False
-            self.fruit.set_position(self.snake, self.walls, self.directional_blocks)
+            self.fruit.set_position(self)
 
         self.game_window.fill(config.black)
 

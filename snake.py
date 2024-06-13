@@ -11,7 +11,7 @@ class Snake:
         self.speed = config.start_speed
         self.position = [0, 0]
         self.body = []
-        self.cur_direction = random.choice(list(config.direction_dir.keys()))
+        self.cur_direction = "RIGHT"
         self.set_start_position()
         self.set_start_body()
 
@@ -135,9 +135,8 @@ class Snake:
         Returns:
             bool: True if there is a collision, False otherwise.
         """
-        for block in self.body[1:]:
-            if self.position == block:
-                return True
+        if self.position in self.body[1:]:
+            return True
         return False
 
     def wall_collision(self, walls):
