@@ -161,6 +161,7 @@ class Game:
         """
         # Add all numbers to config
         # Flashing image for this
+        # Add sound effects
         diff_options = [
             self.increase_speed,
             self.add_wall,
@@ -174,9 +175,26 @@ class Game:
         )
         diff_rect = diff_surface.get_rect()
         diff_rect.center = (config.window_width / 2, config.window_height / 2)
-        self.game_window.blit(diff_surface, diff_rect)
-        pygame.display.flip()
-        pygame.time.delay(1000)
+
+        for _ in range(config.diff_message_count):
+            # Draw the text
+            self.game_window.blit(diff_surface, diff_rect)
+            pygame.display.flip()
+            pygame.time.delay(config.diff_message_duration)
+
+            # Clear the text by filling the area with the background color
+            self.game_window.fill(config.black, diff_rect)
+
+            # Re-draw game elements
+            self.snake.draw(self.game_window)
+            self.fruit.draw(self.game_window)
+            self.draw_walls()
+            self.draw_directional_blocks()
+            self.show_score_strip()
+            pygame.display.flip()
+            pygame.time.delay(config.diff_message_duration)
+
+        # pygame.time.delay(1000)
 
     def show_score(self):
         """

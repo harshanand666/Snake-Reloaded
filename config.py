@@ -37,5 +37,9 @@ block_size = 10
 poison_score_penalty = 3
 score_color_counter = 20
 
+# difficutly
+diff_message_duration = 100
+diff_message_count = 5
+
 # opposite directions
 direction_dir = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}
