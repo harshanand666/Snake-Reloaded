@@ -15,6 +15,8 @@ class Game:
         self.walls = []
         self.directional_blocks = []
         self.fruit.set_position(self)
+        self.score_color = config.white
+        self.score_color_counter = 0
 
     def restart(self):
         """
@@ -159,7 +161,6 @@ class Game:
         """
         # Add all numbers to config
         # Flashing image for this
-        # Flashing image when eating poisonous fruit
         diff_options = [
             self.increase_speed,
             self.add_wall,
@@ -181,9 +182,8 @@ class Game:
         """
         Displays the current score on the game window.
         """
-        # ADD SEPARATE STRIP FOR SCORE
         score_surface = pygame.font.SysFont(*config.score_font).render(
-            "Score : " + str(self.score), True, config.white
+            "Score : " + str(self.score), True, self.score_color
         )
         score_rect = score_surface.get_rect()
         score_rect.topleft = (10, 5)
@@ -232,6 +232,11 @@ class Game:
         )
         self.show_score()
         self.show_legend()
+        if self.score_color_counter > 0:
+            self.score_color = config.red
+            self.score_color_counter -= 1
+        else:
+            self.score_color = config.white
 
     def game_over(self):
         """
@@ -311,6 +316,7 @@ class Game:
             self.snake.body = self.snake.body[
                 : max(snake_len // 2, config.start_snake_size)
             ]
+            self.score_color_counter = config.score_color_counter
             self.fruit.eaten = False
             self.fruit.poisonous_eaten = False
             self.fruit.poisonous = False
@@ -324,5 +330,4 @@ class Game:
         self.draw_directional_blocks()
 
         self.check_game_over()
-
         self.show_score_strip()

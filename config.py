@@ -35,6 +35,7 @@ block_size = 10
 
 # poisonous
 poison_score_penalty = 3
+score_color_counter = 20
 
 # opposite directions
 direction_dir = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}
