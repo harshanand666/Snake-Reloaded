@@ -22,7 +22,8 @@ class Snake:
         self.position = [
             random.randrange(1, (config.window_width // config.block_size))
             * config.block_size,
-            random.randrange(1, (config.window_height // config.block_size))
+            config.strip_height
+            + random.randrange(1, (config.game_window_height // config.block_size))
             * config.block_size,
         ]
 
@@ -72,10 +73,11 @@ class Snake:
         elif self.position[0] > config.window_width - config.block_size:
             self.position[0] = 0
 
-        if self.position[1] < config.block_size:
+        # strip height added
+        if self.position[1] < config.block_size + config.strip_height:
             self.position[1] = config.window_height - config.block_size
         elif self.position[1] > config.window_height - config.block_size:
-            self.position[1] = 0
+            self.position[1] = config.strip_height
         # self.position[0] %= config.window_width
         # self.position[1] %= config.window_height
 

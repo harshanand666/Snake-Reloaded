@@ -27,7 +27,8 @@ class Fruit:
             position = [
                 random.randrange(1, (config.window_width // config.block_size))
                 * config.block_size,
-                random.randrange(1, (config.window_height // config.block_size))
+                config.strip_height
+                + random.randrange(1, (config.game_window_height // config.block_size))
                 * config.block_size,
             ]
             if not game.overlap_all(position):
@@ -39,7 +40,10 @@ class Fruit:
                 poisonous_position = [
                     random.randrange(1, (config.window_width // config.block_size))
                     * config.block_size,
-                    random.randrange(1, (config.window_height // config.block_size))
+                    config.strip_height
+                    + random.randrange(
+                        1, (config.game_window_height // config.block_size)
+                    )
                     * config.block_size,
                 ]
                 if (

@@ -73,7 +73,8 @@ class Game:
             random_position = [
                 random.randrange(1, (config.window_width // config.block_size))
                 * config.block_size,
-                random.randrange(1, (config.window_height // config.block_size))
+                config.strip_height
+                + random.randrange(1, (config.game_window_height // config.block_size))
                 * config.block_size,
             ]
             if not self.overlap_all(random_position):
@@ -83,14 +84,14 @@ class Game:
         wall_direction = random.choice(["V", "H"])
         if wall_direction == "H":
             new_wall = [
-                [start_x - i, start_y]
+                [start_x + i, start_y]
                 for i in range(
                     0, config.wall_size * config.block_size, config.block_size
                 )
             ]
         else:
             new_wall = [
-                [start_x, start_y - i]
+                [start_x, start_y + i]
                 for i in range(
                     0, config.wall_size * config.block_size, config.block_size
                 )
@@ -121,7 +122,8 @@ class Game:
             random_position = [
                 random.randrange(1, (config.window_width // config.block_size))
                 * config.block_size,
-                random.randrange(1, (config.window_height // config.block_size))
+                config.strip_height
+                + random.randrange(1, (config.game_window_height // config.block_size))
                 * config.block_size,
             ]
             if not self.overlap_all(random_position):
@@ -158,7 +160,6 @@ class Game:
         # Add all numbers to config
         # Flashing image for this
         # Flashing image when eating poisonous fruit
-        # Add overlap for all blocks
         diff_options = [
             self.increase_speed,
             self.add_wall,
@@ -185,6 +186,7 @@ class Game:
             "Score : " + str(self.score), True, config.white
         )
         score_rect = score_surface.get_rect()
+        score_rect.topleft = (10, 5)
 
         self.game_window.blit(score_surface, score_rect)
 
@@ -218,6 +220,15 @@ class Game:
             legend_rect = legend_surface.get_rect()
             legend_rect.topleft = (x_offset + index * spacing + 15, y_offset - 5)
             self.game_window.blit(legend_surface, legend_rect)
+
+    def show_score_strip(self):
+        pygame.draw.rect(
+            self.game_window,
+            config.grey,
+            pygame.Rect(0, 0, config.window_width, config.strip_height),
+        )
+        self.show_score()
+        self.show_legend()
 
     def game_over(self):
         """
@@ -311,5 +322,4 @@ class Game:
 
         self.check_game_over()
 
-        self.show_score()
-        self.show_legend()
+        self.show_score_strip()

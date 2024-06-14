@@ -18,7 +18,8 @@ red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 255, 0)
 blue = pygame.Color(0, 0, 255)
 yellow = pygame.Color(255, 255, 0)
-purple = (128, 0, 128)
+purple = pygame.Color(128, 0, 128)
+grey = pygame.Color(105, 105, 105)
 
 # Font
 score_font = ("times new roman", 20)
