@@ -222,6 +222,9 @@ class Game:
             self.game_window.blit(legend_surface, legend_rect)
 
     def show_score_strip(self):
+        """
+        Creates the strip to show the score and legend at the top of the screen.
+        """
         pygame.draw.rect(
             self.game_window,
             config.grey,

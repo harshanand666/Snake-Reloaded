@@ -68,18 +68,16 @@ class Snake:
         elif direction == "RIGHT":
             self.position[0] += config.block_size
 
-        if self.position[0] < config.block_size:
+        if self.position[0] < 0:
             self.position[0] = config.window_width - config.block_size
         elif self.position[0] > config.window_width - config.block_size:
             self.position[0] = 0
 
         # strip height added
-        if self.position[1] < config.block_size + config.strip_height:
+        if self.position[1] < config.strip_height:
             self.position[1] = config.window_height - config.block_size
         elif self.position[1] > config.window_height - config.block_size:
             self.position[1] = config.strip_height
-        # self.position[0] %= config.window_width
-        # self.position[1] %= config.window_height
 
     def update_body(self, fruit):
         """
@@ -139,6 +137,8 @@ class Snake:
             bool: True if there is a collision, False otherwise.
         """
         if self.position in self.body[1:]:
+            print(self.position)
+            print(self.body)
             return True
         return False
 
