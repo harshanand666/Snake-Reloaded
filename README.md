@@ -6,6 +6,7 @@ A variant of the classic Snake game developed in Python using Pygame. This versi
 - [Installation](#installation)
 - [Usage](#usage)
 - [Game Features](#game-features)
+- [Screenshots](#screenshots)
 - [Controls](#controls)
 - [Configuration](#configuration)
 - [License](#license)
@@ -18,18 +19,12 @@ A variant of the classic Snake game developed in Python using Pygame. This versi
    cd Snake-Reloaded
    ```
 
-2. **Set up a virtual environment** (optional but recommended):
-   ```sh
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-3. **Install dependencies**:
+2. **Install dependencies**:
    ```sh
    pip install -r requirements.txt
    ```
 
-4. **Run the game**:
+3. **Run the game**:
    ```sh
    python app.py
    ```
@@ -50,6 +45,15 @@ Periodically the game increases in difficulty by adding one of the following ele
 - **Directional Blocks**: Special yellow blocks that force the snake to change direction upon collision.
 - **Poisonous Fruits**: 2 Fruits spawn out of which one is poisonous. The poisonous fruit reduces the snake's size and score when eaten.
 
+## Screenshots
+![Gameplay Screenshot 1](assets/images/gameplay.png)
+
+
+![Gameplay Screenshot 2](assets/images/difficulty.png)
+
+
+![Gameplay Screenshot 3](assets/images/game_over.png)
+
 ## Controls
 
 - **Arrow Keys**: Change the snake's direction.
@@ -63,9 +67,11 @@ All game configurations are located in the `config.py` file. You can adjust vari
 - Window size
 - Snake speed
 - Wall size
+- Difficulty settings
 - Colors
 - Fonts
 
 ## License
 
 This project is licensed under the MIT License. 
+
