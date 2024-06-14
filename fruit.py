@@ -1,6 +1,7 @@
 import random
 import config
 import pygame
+import utils
 
 
 class Fruit:
@@ -14,7 +15,7 @@ class Fruit:
         self.poisonous_position = [0, 0]
         self.poisonous_eaten = False
 
-    def set_position(self, game):
+    def set_position(self, snake, fruit, walls, directional_blocks):
         """
         Sets a random position for the fruit and a poisonous fruit if applicable.
 
@@ -24,30 +25,28 @@ class Fruit:
             directional_blocks (list): List of directional blocks positions.
         """
         while True:
-            position = [
-                random.randrange(1, (config.window_width // config.block_size))
-                * config.block_size,
-                config.strip_height
-                + random.randrange(1, (config.game_window_height // config.block_size))
-                * config.block_size,
-            ]
-            if not game.overlap_all(position):
+            position = utils.get_random_position()
+            if not utils.overlap_all(
+                position,
+                snake,
+                fruit,
+                walls,
+                directional_blocks,
+            ):
                 self.position = position
                 break
 
         if self.poisonous:
             while True:
-                poisonous_position = [
-                    random.randrange(1, (config.window_width // config.block_size))
-                    * config.block_size,
-                    config.strip_height
-                    + random.randrange(
-                        1, (config.game_window_height // config.block_size)
-                    )
-                    * config.block_size,
-                ]
+                poisonous_position = utils.get_random_position()
                 if (
-                    not game.overlap_all(poisonous_position)
+                    not utils.overlap_all(
+                        poisonous_position,
+                        snake,
+                        fruit,
+                        walls,
+                        directional_blocks,
+                    )
                     and poisonous_position != position
                 ):
                     self.poisonous_position = poisonous_position

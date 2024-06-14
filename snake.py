@@ -1,6 +1,7 @@
 import pygame
 import config
 import random
+import utils
 
 
 class Snake:
@@ -19,13 +20,7 @@ class Snake:
         """
         Sets the start position of the snake randomly on the screen.
         """
-        self.position = [
-            random.randrange(1, (config.window_width // config.block_size))
-            * config.block_size,
-            config.strip_height
-            + random.randrange(1, (config.game_window_height // config.block_size))
-            * config.block_size,
-        ]
+        self.position = utils.get_random_position()
 
     def set_start_body(self):
         """
@@ -68,12 +63,13 @@ class Snake:
         elif direction == "RIGHT":
             self.position[0] += config.block_size
 
+        # Check for boundary collision and update position to other boundary
+
         if self.position[0] < 0:
             self.position[0] = config.window_width - config.block_size
         elif self.position[0] > config.window_width - config.block_size:
             self.position[0] = 0
 
-        # strip height added
         if self.position[1] < config.strip_height:
             self.position[1] = config.window_height - config.block_size
         elif self.position[1] > config.window_height - config.block_size:
@@ -104,6 +100,7 @@ class Snake:
             directional_blocks (list): List of directional blocks positions.
         """
         if self.directional_collision(directional_blocks):
+            # Random direction other than the opposite of current direction
             valid_dirs = [
                 dir
                 for dir in config.direction_dir.keys()

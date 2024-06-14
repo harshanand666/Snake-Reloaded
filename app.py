@@ -1,8 +1,6 @@
 # importing libraries
 import pygame
 import config
-from snake import Snake
-from fruit import Fruit
 from game import Game
 
 # Initialising pygame
@@ -18,9 +16,7 @@ fps = pygame.time.Clock()
 
 game_window = pygame.display.set_mode((config.window_width, config.window_height))
 
-snake = Snake()
-fruit = Fruit()
-game = Game(snake, fruit, game_window)
+game = Game(game_window)
 
 # Main Function
 while True:
@@ -31,4 +27,4 @@ while True:
     pygame.display.update()
 
     # Frame Per Second /Refresh Rate
-    fps.tick(snake.speed)
+    fps.tick(game.snake.speed)
