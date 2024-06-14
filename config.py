@@ -2,14 +2,23 @@ import pygame
 
 start_snake_size = 8
 start_speed = 20
-speed_increase = 10
-difficulty_multiple = 1
+speed_increase = 5
 
 # Window size
 window_width = 720
 window_height = 480
-strip_height = 40  # Height of the strip for score and legend
+strip_height = 30  # Height of the strip for score and legend
 game_window_height = window_height - strip_height
+
+# positions
+score_x = 10
+score_y = 5
+legend_x_offset = 150
+legend_y_offset = 10
+legend_spacing = 200
+legend_text_x_space = 15
+legend_text_y_space = 5
+
 
 # defining colors
 black = pygame.Color(0, 0, 0)
@@ -35,9 +44,10 @@ block_size = 10
 
 # poisonous
 poison_score_penalty = 3
-score_color_counter = 20
+score_color_counter = 30
 
 # difficutly
+difficulty_multiple = 1
 diff_message_duration = 100
 diff_message_count = 5
 

@@ -160,7 +160,6 @@ class Game:
         Increases the difficulty of the game by adding speed, walls, directional blocks, or poisonous fruit.
         """
         # Add all numbers to config
-        # Flashing image for this
         # Add sound effects
         diff_options = [
             self.increase_speed,
@@ -204,7 +203,7 @@ class Game:
             "Score : " + str(self.score), True, self.score_color
         )
         score_rect = score_surface.get_rect()
-        score_rect.topleft = (10, 5)
+        score_rect.topleft = (config.score_x, config.score_y)
 
         self.game_window.blit(score_surface, score_rect)
 
@@ -220,23 +219,28 @@ class Game:
 
         font = pygame.font.SysFont(*config.legend_font)
 
-        # Start position for legend
-        x_offset = 150
-        y_offset = 10
-        spacing = 200
-
         for index, (text, color) in enumerate(legend_items):
             # Draw colored square
             pygame.draw.rect(
                 self.game_window,
                 color,
-                pygame.Rect(x_offset + index * spacing, y_offset, 10, 10),
+                pygame.Rect(
+                    config.legend_x_offset + index * config.legend_spacing,
+                    config.legend_y_offset,
+                    config.block_size,
+                    config.block_size,
+                ),
             )
 
             # Draw text
             legend_surface = font.render(text, True, config.white)
             legend_rect = legend_surface.get_rect()
-            legend_rect.topleft = (x_offset + index * spacing + 15, y_offset - 5)
+            legend_rect.topleft = (
+                config.legend_x_offset
+                + index * config.legend_spacing
+                + config.legend_text_x_space,
+                config.legend_y_offset - config.legend_text_y_space,
+            )
             self.game_window.blit(legend_surface, legend_rect)
 
     def show_score_strip(self):
@@ -261,14 +265,14 @@ class Game:
         Displays the game over message and waits for user input to restart or exit the game.
         """
         score_surface = pygame.font.SysFont(*config.game_over_font).render(
-            f"Your Score is : {self.score}", True, config.red
+            f"Your Score is : {self.score}", True, config.blue
         )
         score_rect = score_surface.get_rect()
         score_rect.midtop = (config.window_width / 2, config.window_height / 4)
         self.game_window.blit(score_surface, score_rect)
 
         restart_surface = pygame.font.SysFont(*config.game_over_font).render(
-            "Press space to restart. Escape to exit.", True, config.red
+            "Press space to restart. Escape to exit.", True, config.blue
         )
         restart_rect = restart_surface.get_rect()
         restart_rect.midtop = (config.window_width / 2, config.window_height / 2)
@@ -332,7 +336,7 @@ class Game:
             self.score = max(self.score - config.poison_score_penalty, 0)
             snake_len = len(self.snake.body)
             self.snake.body = self.snake.body[
-                : max(snake_len // 2, config.start_snake_size)
+                : max(snake_len - config.poison_score_penalty, config.start_snake_size)
             ]
             self.score_color_counter = config.score_color_counter
             self.fruit.eaten = False

@@ -89,7 +89,7 @@ class Snake:
         self.body.insert(0, list(self.position))
         if self.position == fruit.position:
             fruit.eaten = True
-        elif self.position == fruit.poisonous_position:
+        elif self.position == fruit.poisonous_position and fruit.poisonous:
             fruit.poisonous_eaten = True
         else:
             self.body.pop()
@@ -137,8 +137,6 @@ class Snake:
             bool: True if there is a collision, False otherwise.
         """
         if self.position in self.body[1:]:
-            print(self.position)
-            print(self.body)
             return True
         return False
 
