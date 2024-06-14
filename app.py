@@ -7,6 +7,8 @@ from game import Game
 
 # Initialising pygame
 pygame.init()
+pygame.mixer.init()
+
 
 # Initialise game window
 pygame.display.set_caption("Snake Reloaded")

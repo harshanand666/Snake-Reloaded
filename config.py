@@ -47,7 +47,7 @@ poison_score_penalty = 3
 score_color_counter = 30
 
 # difficutly
-difficulty_multiple = 1
+difficulty_multiple = 2
 diff_message_duration = 100
 diff_message_count = 5
 

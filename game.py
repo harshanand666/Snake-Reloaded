@@ -18,6 +18,12 @@ class Game:
         self.score_color = config.white
         self.score_color_counter = 0
 
+        self.background_music = "./assets/sounds/background.mp3"
+        self.game_over_sound = "./assets/sounds/game_over.wav"
+
+        pygame.mixer.music.load(self.background_music)
+        pygame.mixer.music.play(-1)  # Loop indefinitely
+
     def restart(self):
         """
         Restarts the game by resetting the snake, fruit, score, and other elements.
@@ -31,6 +37,10 @@ class Game:
         self.snake.set_start_body()
         self.snake.speed = config.start_speed
         self.fruit.set_position(self)
+
+        # Restart background music
+        pygame.mixer.music.load(self.background_music)
+        pygame.mixer.music.play(-1)
 
     def overlap_all(self, position):
         """
@@ -159,8 +169,8 @@ class Game:
         """
         Increases the difficulty of the game by adding speed, walls, directional blocks, or poisonous fruit.
         """
-        # Add all numbers to config
-        # Add sound effects
+        # Add comments
+        # Refactor Walls and Directional Blocks
         diff_options = [
             self.increase_speed,
             self.add_wall,
@@ -264,6 +274,14 @@ class Game:
         """
         Displays the game over message and waits for user input to restart or exit the game.
         """
+
+        # Stop the background music
+        pygame.mixer.music.stop()
+
+        # Play the game over sound
+        pygame.mixer.music.load(self.game_over_sound)
+        pygame.mixer.music.play()
+
         score_surface = pygame.font.SysFont(*config.game_over_font).render(
             f"Your Score is : {self.score}", True, config.blue
         )
